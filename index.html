@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>PHP Calculator</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .first_button {
+            /* Добавить анимацию при нажатии */
+            animation: shake 0.82s cubic-bezier (.36, .07, .19, .97) both;
+            /* Установить количество повторений анимации в 1 */
+            animation-iteration-count: 1;
+            transform: translate3d (0, 0, 0);
+            backface-visibility: hidden;
+            perspective: 1000px;
+        }
+        @keyframes shake {
+            10%, 90% {
+                transform: translate3d (-1px, 0, 0);
+            }
+            20%, 80% {
+                transform: translate3d (2px, 0, 0);
+            }
+            30%, 50%, 70% {
+                transform: translate3d (-4px, 0, 0);
+            }
+            40%, 60% {
+                transform: translate3d (4px, 0, 0);
+            }
+        }
+    </style>
+    <script>
+        $(document).ready(function(){
+            // Обработка клика по кнопке
+            $("button").click(function(){
+                // Получение текста кнопки
+                var val = $(this).text();
+                // Получение текущего значения поля ввода
+                var input = $("#input").val();
+                // Если кнопка равно, то отправить выражение на сервер для вычисления
+                if (val == "=") {
+                    $.post("calc.php", {expression: input}, function(data){
+                        // Отобразить результат в поле ввода
+                        $("#input").val(data);
+                    });
+                    // Если кнопка CE, то очистить поле ввода
+                } else if (val == "CE") {
+                    $("#input").val("");
+                    // Иначе добавить символ к выражению в поле ввода
+                } else {
+                    $("#input").val(input + val);
+                }
+                // Сбросить анимацию кнопки
+                $(this).css("animation", "none");
+                // Запустить анимацию кнопки снова
+                setTimeout(() => $(this).css("animation", ""), 10);
+            });
+        });
+    </script>
+</head>
+<body>
+<input id="input" type="text" readonly><br>
+<button class="first_button">1</button>
+<button class="first_button">2</button>
+<button class="first_button">3</button>
+<button class="first_button">+</button><br>
+<button class="first_button">4</button>
+<button class="first_button">5</button>
+<button class="first_button">6</button>
+<button class="first_button">-</button><br>
+<button class="first_button">7</button>
+<button class="first_button">8</button>
+<button class="first_button">9</button>
+<button class="first_button">*</button><br>
+<button class="first_button">0</button>
+<button class="first_button">.</button>
+<button class="first_button">=</button>
+<button class="first_button">/</button><br>
+<button class="first_button">CE</button>
+</body>
+</html>
